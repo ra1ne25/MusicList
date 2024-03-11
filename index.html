@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube очередь</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">YouTube Очередь</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Главная</a>
+                </li>
+                <!-- Другие пункты меню могут быть добавлены здесь -->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="telegram.org"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" alt="Telegram_logo"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="youtube.com"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube_logo"></a>
+                </li> -->
+                <!-- Иконки и ссылки на другие соцсети могут быть добавлены здесь -->
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center my-4">
+            <div class="col-lg-8">
+                <form id="form" class="input-group mb-3">
+                    <input type="text" class="form-control" id="url" placeholder="Введите URL видео YouTube">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-primary">Добавить</button>
+                        <button type="button" class="btn btn-outline-secondary" id="skip-video">Пропустить</button>
+                    </div>
+                </form>
+                <div id="queue" class="queue-list"></div>
+                <div id="player" class="player-container"></div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div id="player"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

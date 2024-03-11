@@ -1,0 +1,56 @@
+body {
+    padding-top: 20px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.nav-link img {
+    width: 24px;
+    height: 24px;
+}
+
+#queue {
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.queue-item.currently-playing {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.player-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+@media (max-width: 576px) {
+    .navbar-nav {
+        margin-top: 10px;
+    }
+
+    .navbar-brand {
+        font-size: 20px;
+    }
+
+    .input-group .form-control {
+        font-size: 14px;
+    }
+
+    .input-group .btn {
+        font-size: 14px;
+    }
+}
