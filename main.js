@@ -2,6 +2,8 @@ let player;
 let queue = [];
 let queueIndex = 0;
 var isAnyVideoLoaded = false; // добавьте эту
+let db = firebase.database();
+
 
 
 function fetchVideoTitle(videoId) {
@@ -53,30 +55,38 @@ async function addToQueue(url) {
     const videoID = extractVideoID(url);
     if (videoID !== null) {
         const title = await fetchVideoTitle(videoID);
-        queue.push({id: videoID, title: title});
-        updateQueue();
-        if (player.getPlayerState() === YT.PlayerState.UNSTARTED || player.getPlayerState() === YT.PlayerState.ENDED || player.getPlayerState() === YT.PlayerState.CUED || queue.length === 1) {
-            playNext();
-        }
+
+        // Добавляем видео в базу данных Firebase
+        const queueRef = db.ref('queue');
+        queueRef.push({ id: videoID, title: title });
     } else {
         alert("Invalid YouTube video URL. Please try again with a valid URL.");
     }
 }
 
 function playNext() {
-    if (queue.length > queueIndex) {
-        const nextVideo = queue[queueIndex];
-        isAnyVideoLoaded = true; // Обновляем, когда загрузили новое видео.
-        player.loadVideoById({videoId: nextVideo.id, startSeconds: 0, suggestedQuality: "large"});
-        player.playVideo();
-        queueIndex++;
-        updateQueue(); // Обновляем очередь, чтобы выделить текущее видео.
-    } else if (isAnyVideoLoaded) {
-        player.stopVideo();
-        isAnyVideoLoaded = false;  // Сбрасываем состояние, если видео в очереди закончились.
-        queueIndex = 0; // Сбрасываем индекс очереди, если закончились видео.
-    }
+    const queueRef = db.ref('queue');
+    queueRef.once('value', (snapshot) => {
+        const queueObject = snapshot.val();
+        const queueArray = Object.keys(queueObject).map(key => queueObject[key]);
+
+        if (queueArray.length > queueIndex) {
+            const nextVideo = queueArray[queueIndex];
+            isAnyVideoLoaded = true;
+
+            player.loadVideoById({ videoId: nextVideo.id, startSeconds: 0, suggestedQuality: "large"});
+            player.playVideo();
+            queueIndex++;
+
+            updateQueue(queueArray); // Вам понадобится обновить эту функцию, чтобы она принимала массив в качестве аргумента
+        } else if (isAnyVideoLoaded) {
+            player.stopVideo();
+            isAnyVideoLoaded = false;
+            queueIndex = 0;
+        }
+    });
 }
+
 
 function initPlayer(videoID) {
     player = new YT.Player('player', {
@@ -90,14 +100,14 @@ function initPlayer(videoID) {
     });
 }
 
-function updateQueue() {
+function updateQueue(queueArray) {
     const queueElement = document.getElementById('queue');
     queueElement.innerHTML = '';
-    queue.forEach((video, index) => {
+    queueArray.forEach((video, index) => {
         const item = document.createElement('p');
         item.textContent = `${index + 1}. ${video.title}`;
         item.classList.add('queue-item');
-        if (index === queueIndex - 1) { // Потому что увеличиваем queueIndex сразу после воспроизведения.
+        if (index === queueIndex - 1) {
             item.classList.add('currently-playing');
         }
         queueElement.appendChild(item);
@@ -109,3 +119,10 @@ function extractVideoID(url) {
     const videoID = new URL(url).searchParams.get('v');
     return videoID;
 }
+
+// Совет: Напишите код для обновления интерфейса при изменении данных в Firebase
+db.ref('queue').on('value', (snapshot) => {
+    const queueObject = snapshot.val();
+    const queueArray = Object.keys(queueObject).map(key => queueObject[key]);
+    updateQueue(queueArray); // Обновляем интерфейс пользователя
+});
